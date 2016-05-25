@@ -16,7 +16,7 @@ public final class GraphFrame extends JFrame {
     private final GraphGuiUtil util;
 
     public GraphFrame(File file, Readable source) {
-        util = new GraphGuiUtil(PO, this, "Graph tool", file, source, new QuantumScheduleFactory());
+        util = new GraphGuiUtil(PO, this, "Graph tool", file, source, new QuantumScheduleFactory(), true);
         util.addTo(this);
         JToolBar bar = new JToolBar();
         bar.add(new AbstractAction("New") {

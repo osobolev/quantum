@@ -144,7 +144,7 @@ public final class Schedule extends BaseSchedule<Event> {
 
     public StatResult getStat() {
         synchronized (lock) {
-            StatResult stat = ScheduleUtil.getStat(g, list, currentTime, null, extractor);
+            StatResult stat = ScheduleUtil.getStat(g, list, currentTime, null, null, extractor);
             modifyStat(stat);
             return stat;
         }

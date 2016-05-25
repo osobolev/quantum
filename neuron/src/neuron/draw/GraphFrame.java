@@ -53,7 +53,7 @@ public final class GraphFrame extends JFrame {
         tfTauPeriod.getDocument().addDocumentListener(documentListener);
         tfTauRestore.getDocument().addDocumentListener(documentListener);
         tfDT.getDocument().addDocumentListener(documentListener);
-        util = new GraphGuiUtil(PO, this, "Neuron", file, source, new NeuronScheduleFactory(tfStartImpulses, tfTauPeriod, tfTauRestore, tfDT));
+        util = new GraphGuiUtil(PO, this, "Neuron", file, source, new NeuronScheduleFactory(tfStartImpulses, tfTauPeriod, tfTauRestore, tfDT), false);
         util.addTo(this);
         JToolBar bar = new JToolBar();
         bar.add(new AbstractAction("New") {

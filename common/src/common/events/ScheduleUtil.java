@@ -38,7 +38,8 @@ public final class ScheduleUtil {
         }
     }
 
-    public static <K extends Number, T> StatResult getStat(Graph g, TreeMap<K, List<T>> list, K currentTime, K maxTime, EventData<T> extractor) {
+    public static <K extends Number, T> StatResult getStat(Graph g, TreeMap<K, List<T>> list,
+                                                           K currentTime, K maxTime, K epsilon, EventData<T> extractor) {
         double sum = 0;
         int count = 0;
         int nedges = g.getEdgeNum();
@@ -58,7 +59,7 @@ public final class ScheduleUtil {
                 count++;
             }
         }
-        return new StatResult(currentTime, count, maxTime, sum, energy, edgeNum, nodeValue, g);
+        return new StatResult(currentTime, count, maxTime, epsilon, sum, energy, edgeNum, nodeValue, g);
     }
 
     public static <K extends Number, T> ShowState showPhotons(Graph g, TreeMap<K, List<T>> list, double time, ISchedule schedule,

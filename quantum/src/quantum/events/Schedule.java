@@ -20,6 +20,7 @@ public final class Schedule extends BaseSchedule<SmallEntry> {
     private int maxCount;
     private Number maxTime;
     private Number addDelay;
+    private Number epsilon;
 
     public Schedule(Graph g, double ampTol, Arithmetic a) {
         super(g, a, new EventData<SmallEntry>() {
@@ -44,6 +45,7 @@ public final class Schedule extends BaseSchedule<SmallEntry> {
         this.currentTime = a.zero();
         this.maxTime = a.zero();
         this.addDelay = a.zero();
+        this.epsilon = a.zero();
     }
 
     public void firstPhotons() {
@@ -52,9 +54,13 @@ public final class Schedule extends BaseSchedule<SmallEntry> {
             for (int i = 0; i < g.getEdgeNum(); i++) {
                 Boolean startForward = g.isStartForward(i);
                 if (startForward != null) {
-                    Number t0 = a.evaluate(g.getEdgeLength(i).doubleValue() / 2.0);
+                    double len = g.getEdgeLength(i).doubleValue();
+                    double half = len / 2.0;
+                    Number t0 = a.evaluate(half);
                     schedule(t0, amp, i, startForward.booleanValue());
-                    addDelay = t0;
+                    double eps = len - half;
+                    addDelay = a.evaluate(-eps);
+                    epsilon = a.evaluate(eps);
                 }
             }
         }
@@ -141,7 +147,7 @@ public final class Schedule extends BaseSchedule<SmallEntry> {
 
     public StatResult getStat() {
         synchronized (lock) {
-            return ScheduleUtil.getStat(g, list, a.add(currentTime, addDelay), a.add(maxTime, addDelay), extractor);
+            return ScheduleUtil.getStat(g, list, a.add(currentTime, addDelay), a.add(maxTime, addDelay), epsilon, extractor);
         }
     }
 

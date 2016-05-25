@@ -33,7 +33,8 @@ public abstract class ShowFrameBase extends JFrame {
     private final JSlider speed = new JSlider(0, 1000, 500);
     private final int fps;
 
-    protected ShowFrameBase(String[] args, String title, PanelOptions po, ScheduleFactory factory) throws IOException, InitException {
+    protected ShowFrameBase(String[] args, String title, PanelOptions po,
+                            ScheduleFactory factory, SequenceRunner runner) throws IOException, InitException {
         super(title);
         this.title = title;
 
@@ -42,7 +43,7 @@ public abstract class ShowFrameBase extends JFrame {
 
         this.fps = fps;
 
-        this.panel = new GraphPanel(po, StatModeEnum.ENERGY);
+        this.panel = new GraphPanel(po, StatModeEnum.ENERGY, runner);
 
         if (fps > 0) {
             String name = file.getName();

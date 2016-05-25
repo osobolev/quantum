@@ -36,7 +36,7 @@ final class GraphPanel extends JComponent {
     private static final Color START_COLOR = Color.red.darker();
 
     private final GraphModel model = new GraphModel();
-    private final DecimalFormat df4;
+    final DecimalFormat df4;
     private final DecimalFormat cdf;
     private final DecimalFormat sdf;
     private StatModeEnum mode;
@@ -58,7 +58,7 @@ final class GraphPanel extends JComponent {
     private final PanelOptions options;
     private Integer revision = null;
 
-    GraphPanel(final PanelOptions options, StatModeEnum mode) {
+    GraphPanel(final PanelOptions options, StatModeEnum mode, final SequenceRunner runner) {
         this.options = options;
         this.mode = mode;
 
@@ -74,13 +74,24 @@ final class GraphPanel extends JComponent {
                     if (edgeSelected != null) {
                         if (result == null) {
                             Boolean direction = model.getStartDirection(edgeSelected);
-                            WeightDialog dlg = new WeightDialog((Frame) window, edgeSelected.weight, direction, options.directed);
+                            WeightDialog dlg = new WeightDialog(
+                                (Frame) window, runner, edgeSelected.weight, direction, options.directed
+                            );
                             if (dlg.isOk()) {
                                 model.setEdgeWeight(edgeSelected, dlg.getResult());
                                 Boolean startDirection = dlg.getStartDirection();
                                 model.setStartEdge(edgeSelected, startDirection);
                                 changed = true;
                                 repaint();
+                            } else {
+                                int[] range = dlg.getRange();
+                                if (range != null) {
+                                    int edgeIndex = model.getEdges().indexOf(edgeSelected);
+                                    int from = range[0];
+                                    int to = range[1];
+                                    int step = range[2];
+                                    runner.runAndShow(edgeIndex, from, to, step);
+                                }
                             }
                         }
                     } else if (selected != null && options.weighted) {

@@ -15,6 +15,9 @@ final class WeightDialog extends JDialog {
     private final JTextField tfWeight;
     private final JComboBox chStart = new JComboBox(new String[] {"-", "Forward", "Back"});
     private final JCheckBox cbStart = new JCheckBox("Start edge");
+    private final JSpinner tfFrom = new JSpinner(new SpinnerNumberModel(1, 1, 1000000, 1));
+    private final JSpinner tfTo = new JSpinner(new SpinnerNumberModel(1, 1, 1000000, 1));
+    private final JSpinner tfStep = new JSpinner(new SpinnerNumberModel(1, 1, 1000000, 1));
     private final JButton btnOk = new JButton("OK");
     private final JButton btnCancel = new JButton("Cancel");
 
@@ -22,8 +25,9 @@ final class WeightDialog extends JDialog {
 
     private boolean ok = false;
     private String result;
+    private int[] range = null;
 
-    WeightDialog(Frame owner, String value, Boolean direction, boolean directed) {
+    WeightDialog(Frame owner, SequenceRunner runner, String value, Boolean direction, boolean directed) {
         super(owner, "Enter weight", true);
         this.directed = directed;
         result = value;
@@ -38,33 +42,72 @@ final class WeightDialog extends JDialog {
             }
         }
 
-        JPanel center = new JPanel();
-        center.add(new JLabel("Weight:"));
         tfWeight = new JTextField(value, 10);
-        center.add(tfWeight);
 
-        JPanel start = new JPanel();
+        JPanel center1 = new JPanel(new GridBagLayout());
+        center1.add(new JLabel("Weight:"), new GridBagConstraints(
+            0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(5, 5, 0, 5), 0, 0
+        ));
+        center1.add(tfWeight, new GridBagConstraints(
+            1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 0, 0, 5), 0, 0
+        ));
+
         if (directed) {
-            start.add(cbStart);
+            center1.add(cbStart, new GridBagConstraints(
+                1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 5, 0, 5), 0, 0
+            ));
         } else {
-            start.add(new JLabel("Initial direction:"));
-            start.add(chStart);
+            center1.add(new JLabel("Initial direction:"), new GridBagConstraints(
+                0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0
+            ));
+            center1.add(chStart, new GridBagConstraints(
+                1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 0, 5, 5), 0, 0
+            ));
         }
 
-        JPanel main = new JPanel(new BorderLayout());
-        main.add(center, BorderLayout.CENTER);
-        main.add(start, BorderLayout.SOUTH);
+        final JTabbedPane tab = new JTabbedPane();
+        tab.addTab("Edge", center1);
+        if (runner != null) {
+            JPanel center2 = new JPanel(new GridBagLayout());
+            center2.add(new JLabel("From:"), new GridBagConstraints(
+                0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(5, 5, 0, 5), 0, 0
+            ));
+            center2.add(tfFrom, new GridBagConstraints(
+                1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 0, 0, 5), 0, 0
+            ));
+            center2.add(new JLabel("To:"), new GridBagConstraints(
+                0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(5, 5, 0, 5), 0, 0
+            ));
+            center2.add(tfTo, new GridBagConstraints(
+                1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 0, 0, 5), 0, 0
+            ));
+            center2.add(new JLabel("Step:"), new GridBagConstraints(
+                0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0
+            ));
+            center2.add(tfStep, new GridBagConstraints(
+                1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 0, 5, 5), 0, 0
+            ));
+            tab.addTab("Run", center2);
+        }
 
         JPanel down = new JPanel();
         down.add(btnOk);
         down.add(btnCancel);
         btnOk.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String s = tfWeight.getText().replace(',', '.');
-                if (validate(s)) {
-                    result = s;
-                    ok = true;
+                if (tab.getSelectedIndex() == 1) {
+                    int from = ((Number) tfFrom.getValue()).intValue();
+                    int to = ((Number) tfTo.getValue()).intValue();
+                    int step = ((Number) tfStep.getValue()).intValue();
+                    range = new int[] {from, to, step};
                     dispose();
+                } else {
+                    String s = tfWeight.getText().replace(',', '.');
+                    if (validate(s)) {
+                        result = s;
+                        ok = true;
+                        dispose();
+                    }
                 }
             }
         });
@@ -73,9 +116,16 @@ final class WeightDialog extends JDialog {
                 dispose();
             }
         });
-        add(main, BorderLayout.CENTER);
+        add(tab, BorderLayout.CENTER);
         add(down, BorderLayout.SOUTH);
         getRootPane().setDefaultButton(btnOk);
+
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                tfWeight.requestFocusInWindow();
+            }
+        });
+
         pack();
         setLocationRelativeTo(owner);
         setVisible(true);
@@ -92,6 +142,10 @@ final class WeightDialog extends JDialog {
 
     boolean isOk() {
         return ok;
+    }
+
+    int[] getRange() {
+        return range;
     }
 
     String getResult() {

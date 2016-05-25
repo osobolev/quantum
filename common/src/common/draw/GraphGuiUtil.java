@@ -1,7 +1,10 @@
 package common.draw;
 
+import common.events.ISchedule;
 import common.events.InitException;
 import common.events.ScheduleFactory;
+import common.events.StatResult;
+import common.graph.Graph;
 import common.math.Arithmetic;
 
 import javax.imageio.ImageIO;
@@ -9,11 +12,15 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
 
@@ -54,12 +61,23 @@ public final class GraphGuiUtil {
         }
     };
 
-    public GraphGuiUtil(PanelOptions po, JFrame frame, String title, File file, Readable source, ScheduleFactory factory) {
+    public GraphGuiUtil(PanelOptions po, JFrame frame, String title, File file, Readable source,
+                        ScheduleFactory factory, boolean runSequence) {
         this.frame = frame;
         this.title = title;
         this.factory = factory;
         StatModeEnum displayMode = SwitchPanel.loadMode();
-        this.panel = new GraphPanel(po, displayMode);
+        SequenceRunner runner;
+        if (runSequence) {
+            runner = new SequenceRunner() {
+                public void runAndShow(int edge, int from, int to, int step) {
+                    runSequence(edge, from, to, step);
+                }
+            };
+        } else {
+            runner = null;
+        }
+        this.panel = new GraphPanel(po, displayMode, runner);
 
         stopModel();
         speed.addChangeListener(new ChangeListener() {
@@ -349,7 +367,7 @@ public final class GraphGuiUtil {
     }
 
     public File saveToC() {
-        Arithmetic a = Arithmetic.createArithmetic(options.timeTol, options.precision);
+        Arithmetic a = getArithmetic();
         File file = new File("graph.txt");
         if (panel.toGraph(a, file) == null) {
             return null;
@@ -358,11 +376,82 @@ public final class GraphGuiUtil {
         }
     }
 
+    public Arithmetic getArithmetic() {
+        return Arithmetic.createArithmetic(options.timeTol, options.precision);
+    }
+
     public List<Double> getTimes() {
         return panel.getTimes();
     }
 
     public List<Double> getStats() {
         return panel.getStats();
+    }
+
+    private static final class ResultTableModel extends AbstractTableModel {
+
+        private final List<String[]> results;
+
+        ResultTableModel(List<String[]> results) {
+            this.results = results;
+        }
+
+        public int getRowCount() {
+            return results.size();
+        }
+
+        public int getColumnCount() {
+            return 2;
+        }
+
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            String[] row = results.get(rowIndex);
+            return row[columnIndex];
+        }
+
+        public String getColumnName(int column) {
+            return column == 0 ? "Length" : "Tmax";
+        }
+    }
+
+    private void runSequence(final int edge, final int from, final int to, final int step) {
+        SwingWorker<List<String[]>, Void> worker = new SwingWorker<List<String[]>, Void>() {
+
+            protected List<String[]> doInBackground() throws Exception {
+                Arithmetic a = getArithmetic();
+                Graph graph = panel.toGraph(a, null);
+                List<String[]> results = new ArrayList<String[]>();
+                for (int len = from; len <= to; len += step) {
+                    Number length = a.evaluate((double) len);
+                    Graph igraph = graph.withEdge(edge, length);
+                    ISchedule schedule = factory.newSchedule(igraph, options.ampTol, a);
+                    schedule.firstPhotons();
+                    while (true) {
+                        if (schedule.getCurrentTime() >= 10000) // todo: use clock time???
+                            break;
+                        schedule.next();
+                    }
+                    StatResult stat = schedule.getStat();
+                    String maxt = panel.df4.format(stat.maxTime) + "+" + panel.df4.format(stat.epsilon);
+                    results.add(new String[] {String.valueOf(len), maxt});
+                }
+                return results;
+            }
+
+            protected void done() {
+                try {
+                    List<String[]> results = get();
+                    JTable table = new JTable(new ResultTableModel(results));
+                    JDialog dialog = new JDialog(frame, "Run results", Dialog.ModalityType.DOCUMENT_MODAL);
+                    dialog.add(new JScrollPane(table));
+                    dialog.pack();
+                    dialog.setLocationRelativeTo(null);
+                    dialog.setVisible(true);
+                } catch (Exception ex) {
+                    handleException(ex);
+                }
+            }
+        };
+        worker.execute();
     }
 }

@@ -7,18 +7,21 @@ public final class StatResult {
     public final Number currentTime;
     public final int numPhotons;
     public final Number maxTime;
+    public final Number epsilon;
     public final double totalEnergy;
     public final double[] edgeEnergy;
     public final int[] edgeNum;
     public final double[] nodeValue;
     public final Graph g;
 
-    public StatResult(Number currentTime, int numPhotons, Number maxTime, double totalEnergy,
+    public StatResult(Number currentTime, int numPhotons,
+                      Number maxTime, Number epsilon, double totalEnergy,
                       double[] edgeEnergy, int[] edgeNum, double[] nodeValue,
                       Graph g) {
         this.currentTime = currentTime;
         this.numPhotons = numPhotons;
         this.maxTime = maxTime;
+        this.epsilon = epsilon;
         this.totalEnergy = totalEnergy;
         this.edgeEnergy = edgeEnergy;
         this.edgeNum = edgeNum;

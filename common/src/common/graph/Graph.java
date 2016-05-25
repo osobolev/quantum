@@ -71,6 +71,19 @@ public final class Graph {
         }
     }
 
+    private Graph(int numVertex, Number[] lengths, int[][] outEdges, int[][] outEdgesFwd, int[][] inEdgesFwd, int[][] destination, Integer[] weights, Boolean[] startForward, int degree, double sigma) {
+        this.numVertex = numVertex;
+        this.lengths = lengths;
+        this.outEdges = outEdges;
+        this.outEdgesFwd = outEdgesFwd;
+        this.inEdgesFwd = inEdgesFwd;
+        this.destination = destination;
+        this.weights = weights;
+        this.startForward = startForward;
+        this.degree = degree;
+        this.sigma = sigma;
+    }
+
     private static int[] toArray(Collection<Integer> c) {
         if (c == null)
             return new int[0];
@@ -186,6 +199,15 @@ public final class Graph {
 
     public Boolean isStartForward(int edge) {
         return startForward[edge];
+    }
+
+    public Graph withEdge(int edge, Number length) {
+        Number[] newLengths = new Number[lengths.length];
+        System.arraycopy(lengths, 0, newLengths, 0, lengths.length);
+        newLengths[edge] = length;
+        return new Graph(
+            numVertex, newLengths, outEdges, outEdgesFwd, inEdgesFwd, destination, weights, startForward, degree, sigma
+        );
     }
 
     public static void main(String[] args) throws FileNotFoundException {

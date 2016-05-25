@@ -8,7 +8,7 @@ import java.io.IOException;
 public final class ShowFrame extends ShowFrameBase {
 
     public ShowFrame(String[] args) throws IOException, InitException {
-        super(args, "Graph Demo", GraphFrame.PO, new QuantumScheduleFactory());
+        super(args, "Graph Demo", GraphFrame.PO, new QuantumScheduleFactory(), null);
     }
 
     public static void main(String[] args) throws Exception {
