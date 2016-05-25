@@ -251,7 +251,7 @@ final class GraphPanel extends JComponent {
                         yp = (e.p2.p.y - e.p1.p.y) * k + e.p1.p.y;
                     } else {
                         if (e.isLoop()) {
-                            Point2D pc = new Point.Double((e.p1.p.x + e.arc.x) / 2, (e.p1.p.y + e.arc.y) / 2);
+                            Point2D pc = new Point.Double((e.p1.p.x + e.arc.x) / 2.0, (e.p1.p.y + e.arc.y) / 2.0);
                             double dx = e.p1.p.x - pc.getX();
                             double dy = e.p1.p.y - pc.getY();
                             double a = 2 * Math.PI * k;
@@ -360,7 +360,7 @@ final class GraphPanel extends JComponent {
                 y1 = e.middleY();
             } else {
                 if (e.isLoop()) {
-                    Point2D pc = new Point.Double((e.p1.p.x + e.arc.x) / 2, (e.p1.p.y + e.arc.y) / 2);
+                    Point2D pc = new Point.Double((e.p1.p.x + e.arc.x) / 2.0, (e.p1.p.y + e.arc.y) / 2.0);
                     int r = (int) Math.round(pc.distance(e.p1.p));
                     g.drawOval((int) Math.round(pc.getX() - r), (int) Math.round(pc.getY() - r), 2 * r, 2 * r);
                 } else {
@@ -633,7 +633,7 @@ final class GraphPanel extends JComponent {
         return photons;
     }
 
-    final int getRevision() {
+    int getRevision() {
         if (revision == null) {
             revision = VersionUtil.loadRevision();
         }
