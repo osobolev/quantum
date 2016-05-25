@@ -25,7 +25,7 @@ final class ComparePanel1 extends JComponent {
 
     private final NumberFormat cdf;
 
-    private int start;
+    private final int start;
     private int end;
 
     ComparePanel1(List<Double> times, List<Double> photons) {

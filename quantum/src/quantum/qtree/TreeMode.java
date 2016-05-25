@@ -27,7 +27,7 @@ enum TreeMode {
 
     private final String name;
 
-    private TreeMode(String name) {
+    TreeMode(String name) {
         this.name = name;
     }
 

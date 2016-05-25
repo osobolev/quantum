@@ -33,7 +33,7 @@ final class SwitchPanel extends JPanel {
         return StatModeEnum.valueOf(GraphGuiUtil.getPrefs().get("display.mode", StatModeEnum.ENERGY.name()));
     }
 
-    private void saveMode(StatModeEnum mode) {
+    private static void saveMode(StatModeEnum mode) {
         Preferences prefs = GraphGuiUtil.getPrefs();
         prefs.put("display.mode", mode.name());
         try {

@@ -7,7 +7,7 @@ enum StatModeEnum {
 
     final StatMode mode;
 
-    private StatModeEnum(StatMode mode) {
+    StatModeEnum(StatMode mode) {
         this.mode = mode;
     }
 

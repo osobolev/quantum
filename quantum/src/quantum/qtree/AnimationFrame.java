@@ -20,7 +20,7 @@ public final class AnimationFrame extends JFrame {
     private static final int DELAY = 200;
 
     private final AnimationPanel panel;
-    private Timer timer = new Timer(DELAY, new ActionListener() {
+    private final Timer timer = new Timer(DELAY, new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             calculate();
         }

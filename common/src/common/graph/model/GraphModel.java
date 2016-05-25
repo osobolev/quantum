@@ -217,7 +217,7 @@ public final class GraphModel {
                 Integer weight = null;
                 if (weightStr != null && !NO_WEIGHT.equals(weightStr)) {
                     try {
-                        weight = new Integer(weightStr);
+                        weight = Integer.valueOf(weightStr);
                     } catch (NumberFormatException nfex) {
                         // ignore
                     }

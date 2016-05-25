@@ -54,7 +54,7 @@ public class RTree {
                 if (j == 0) {
                     newFwd[i + 1][j] = newFwd[i + 1][j].add(k3.mul(fwd));
                     newFwd[i + 1][j + 1] = newFwd[i + 1][j + 1].add(k3.mul(fwd));
-                    newBack[i][j] = newBack[i][j].add((k3_1.mul(fwd)));
+                    newBack[i][j] = newBack[i][j].add(k3_1.mul(fwd));
 
                     if (i == 0) {
                         newFwd[i][j + 1] = newFwd[i][j + 1].add(back);

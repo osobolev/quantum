@@ -35,7 +35,7 @@ public final class Cylinder {
     public static void main(String[] args) throws FileNotFoundException {
         String str = args.length <= 0 ? "100" : args[0];
         double t = Double.parseDouble(str);
-        int n = (int) Math.ceil(Math.sqrt((sqr(t) - sqr(T0))) / D);
+        int n = (int) Math.ceil(Math.sqrt(sqr(t) - sqr(T0)) / D);
         System.out.println(n);
         create(n).toC(new File("cylinder" + str + ".txt"));
     }

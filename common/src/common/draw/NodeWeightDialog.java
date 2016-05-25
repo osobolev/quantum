@@ -58,10 +58,10 @@ final class NodeWeightDialog extends JDialog {
         setVisible(true);
     }
 
-    private Integer validate(String text) {
+    private static Integer validate(String text) {
         if (text.trim().isEmpty())
             return null;
-        return new Integer(text);
+        return Integer.valueOf(text);
     }
 
     boolean isOk() {

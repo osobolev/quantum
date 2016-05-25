@@ -11,7 +11,7 @@ abstract class StatMode {
     private static final DecimalFormat df4 = new DecimalFormat("#.####");
     private static final DecimalFormat df2 = new DecimalFormat("#.##");
 
-    private static abstract class EdgeStatMode extends StatMode {
+    private abstract static class EdgeStatMode extends StatMode {
 
         protected EdgeStatMode(String text) {
             super(text);
@@ -40,7 +40,7 @@ abstract class StatMode {
         protected abstract double getNumberValue(StatResult stat, int edge);
     }
 
-    private static abstract class NodeStatMode extends StatMode {
+    private abstract static class NodeStatMode extends StatMode {
 
         protected NodeStatMode(String text) {
             super(text);
