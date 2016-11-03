@@ -28,16 +28,16 @@ final class OptionsDialog extends JDialog {
         ToolTipManager.sharedInstance().setDismissDelay(60000);
 
         JPanel center = new JPanel(new GridBagLayout());
-//        JLabel lblAmptol = new JLabel("Amplitude tolerance:");
-//        lblAmptol.setToolTipText(
-//            "<html>Currently not used</html>"
-//        );
-//        center.add(lblAmptol, new GridBagConstraints(
-//            0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(5, 5, 0, 0), 0, 0
-//        ));
-//        center.add(tfAmpTol, new GridBagConstraints(
-//            1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 0, 5), 0, 0
-//        ));
+        JLabel lblAmptol = new JLabel("Amplitude tolerance:");
+        lblAmptol.setToolTipText(
+            "<html>Minimal amplitude of packet to be considered existing</html>"
+        );
+        center.add(lblAmptol, new GridBagConstraints(
+            0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(5, 5, 0, 0), 0, 0
+        ));
+        center.add(tfAmpTol, new GridBagConstraints(
+            1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 0, 5), 0, 0
+        ));
         JLabel lblTimetol = new JLabel("Time tolerance:");
         lblTimetol.setToolTipText(
             "<html>Distance between two packets when they are considered collided.<br>" +
