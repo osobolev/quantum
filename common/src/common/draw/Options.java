@@ -13,15 +13,17 @@ class Options {
     final boolean useLog;
     final File logFile;
     final StatModeEnum logMode;
+    final RunMode runMode;
 
     Options(double ampTol, double timeTol, int precision,
-            boolean useLog, File logFile, StatModeEnum logMode) {
+            boolean useLog, File logFile, StatModeEnum logMode, RunMode runMode) {
         this.ampTol = ampTol;
         this.timeTol = timeTol;
         this.precision = precision;
         this.useLog = useLog;
         this.logFile = logFile;
         this.logMode = logMode;
+        this.runMode = runMode;
     }
 
     static File getDefaultFile() {
@@ -46,9 +48,16 @@ class Options {
         boolean useLog = prefs.getBoolean("log.use", false);
         String logFileName = prefs.get("log.file", getDefaultFile().getAbsolutePath());
         String logFileMode = prefs.get("log.mode", StatModeEnum.NUM_BY_LEN_BY_NUM.name());
+        String runModeStr = prefs.get("run.mode", RunMode.NORMAL.name());
+        RunMode runMode;
+        try {
+            runMode = RunMode.valueOf(runModeStr);
+        } catch (IllegalArgumentException ex) {
+            runMode = RunMode.NORMAL;
+        }
         return new Options(
             ampTol, timeTol, precision, useLog, new File(logFileName),
-            StatModeEnum.valueOf(logFileMode)
+            StatModeEnum.valueOf(logFileMode), runMode
         );
     }
 
@@ -59,5 +68,6 @@ class Options {
         prefs.putBoolean("log.use", useLog);
         prefs.put("log.file", logFile == null ? null : logFile.getAbsolutePath());
         prefs.put("log.mode", logMode.name());
+        prefs.put("run.mode", runMode.name());
     }
 }

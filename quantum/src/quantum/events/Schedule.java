@@ -1,6 +1,7 @@
 package quantum.events;
 
 import common.draw.NodeState;
+import common.draw.RunMode;
 import common.events.BaseSchedule;
 import common.events.EventData;
 import common.events.ScheduleUtil;
@@ -16,13 +17,14 @@ import java.util.Map;
 public final class Schedule extends BaseSchedule<SmallEntry> {
 
     private final double ampTol;
+    private final RunMode runMode;
     private Number currentTime;
     private int maxCount;
     private Number maxTime;
     private Number addDelay;
     private Number epsilon;
 
-    public Schedule(Graph g, double ampTol, Arithmetic a) {
+    public Schedule(Graph g, double ampTol, RunMode runMode, Arithmetic a) {
         super(g, a, new EventData<SmallEntry>() {
 
             public boolean isStat(SmallEntry event) {
@@ -42,6 +44,7 @@ public final class Schedule extends BaseSchedule<SmallEntry> {
             }
         });
         this.ampTol = ampTol;
+        this.runMode = runMode;
         this.currentTime = a.zero();
         this.maxTime = a.zero();
         this.addDelay = a.zero();
@@ -82,34 +85,81 @@ public final class Schedule extends BaseSchedule<SmallEntry> {
             boolean[][][] present = new boolean[g.getVertexNum()][g.getEdgeNum()][2];
             boolean[][] dirs = new boolean[g.getVertexNum()][g.getEdgeNum()];
             currentTime = first;
-            for (SmallEntry entry : e) {
-                int vertex = g.getEdgeSide(entry.edge, entry.forward);
-                int[] out = g.goingOut(vertex);
-                if (out.length == 1) {
-                    int edge = out[0];
-                    int direction = index(g.direction(vertex, edge));
-                    present[vertex][edge][direction] = true;
-                    amplitudes[vertex][edge][direction] -= entry.amp;
-                } else {
-                    double k = 2.0 / out.length;
-                    double forward = k * entry.amp;
-                    for (int edge : out) {
-                        boolean outDir;
-                        if (g.isLoop(edge)) {
-                            outDir = dirs[vertex][edge];
-                            dirs[vertex][edge] = !outDir;
-                        } else {
-                            outDir = g.direction(vertex, edge);
-                        }
-                        int direction = index(outDir);
-                        double add;
-                        if (edge == entry.edge && outDir != entry.forward) {
-                            add = (k - 1) * entry.amp;
-                        } else {
-                            add = forward;
-                        }
+            if (runMode == RunMode.NO_BACK_REALLY) {
+                // todo: учет петель
+                boolean[][] incoming = new boolean[g.getVertexNum()][g.getEdgeNum()];
+                for (SmallEntry entry : e) {
+                    int vertex = g.getEdgeSide(entry.edge, entry.forward);
+                    incoming[vertex][entry.edge] = true;
+                }
+                for (SmallEntry entry : e) {
+                    int vertex = g.getEdgeSide(entry.edge, entry.forward);
+                    int[] out = g.goingOut(vertex);
+                    if (out.length == 1) {
+                        int edge = out[0];
+                        int direction = index(g.direction(vertex, edge));
                         present[vertex][edge][direction] = true;
-                        amplitudes[vertex][edge][direction] += add;
+                        amplitudes[vertex][edge][direction] -= entry.amp;
+                    } else {
+                        int outgoing = 0;
+                        for (int edge : out) {
+                            if (!incoming[vertex][edge]) {
+                                outgoing++;
+                            }
+                        }
+                        if (outgoing > 0) {
+                            double k = 1.0 / outgoing;
+                            double forward = k * entry.amp;
+                            for (int edge : out) {
+                                if (!incoming[vertex][edge]) {
+                                    boolean outDir = g.direction(vertex, edge);
+                                    int direction = index(outDir);
+                                    present[vertex][edge][direction] = true;
+                                    amplitudes[vertex][edge][direction] += forward;
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                for (SmallEntry entry : e) {
+                    int vertex = g.getEdgeSide(entry.edge, entry.forward);
+                    int[] out = g.goingOut(vertex);
+                    if (out.length == 1) {
+                        int edge = out[0];
+                        int direction = index(g.direction(vertex, edge));
+                        present[vertex][edge][direction] = true;
+                        amplitudes[vertex][edge][direction] -= entry.amp;
+                    } else {
+                        double k = runMode == RunMode.NORMAL ? 2.0 / out.length : 1.0 / (out.length - 1);
+                        double forward = k * entry.amp;
+                        for (int edge : out) {
+                            boolean outDir;
+                            if (g.isLoop(edge)) {
+                                outDir = dirs[vertex][edge];
+                                dirs[vertex][edge] = !outDir;
+                            } else {
+                                outDir = g.direction(vertex, edge);
+                            }
+                            boolean back = edge == entry.edge && outDir != entry.forward;
+                            double add;
+                            if (runMode == RunMode.NORMAL) {
+                                if (back) {
+                                    add = (k - 1) * entry.amp;
+                                } else {
+                                    add = forward;
+                                }
+                            } else {
+                                if (back) {
+                                    continue;
+                                } else {
+                                    add = forward;
+                                }
+                            }
+                            int direction = index(outDir);
+                            present[vertex][edge][direction] = true;
+                            amplitudes[vertex][edge][direction] += add;
+                        }
                     }
                 }
             }

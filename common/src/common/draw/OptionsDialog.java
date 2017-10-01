@@ -14,7 +14,8 @@ final class OptionsDialog extends JDialog {
     private final JTextField tfPrecision = new JTextField(10);
     private final JCheckBox cbLog = new JCheckBox("Print to log");
     private final JTextField tfFile = new JTextField(10);
-    private final JComboBox chMode = new JComboBox(StatModeEnum.values());
+    private final JComboBox chStatMode = new JComboBox(StatModeEnum.values());
+    private final JComboBox chRunMode = new JComboBox(RunMode.values());
     private final JButton btnOk = new JButton("OK");
     private final JButton btnCancel = new JButton("Cancel");
 
@@ -70,15 +71,22 @@ final class OptionsDialog extends JDialog {
         center.add(new JLabel("Log mode:"), new GridBagConstraints(
             0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(5, 5, 0, 0), 0, 0
         ));
-        center.add(chMode, new GridBagConstraints(
+        center.add(chStatMode, new GridBagConstraints(
             1, 4, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 0, 5), 0, 0
+        ));
+        center.add(new JLabel("Run mode:"), new GridBagConstraints(
+            0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(5, 5, 0, 0), 0, 0
+        ));
+        center.add(chRunMode, new GridBagConstraints(
+            1, 5, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 0, 5), 0, 0
         ));
         tfAmpTol.setText(String.valueOf(options.ampTol));
         tfTimeTol.setText(String.valueOf(options.timeTol));
         tfPrecision.setText(String.valueOf(options.precision));
         cbLog.setSelected(options.useLog);
         tfFile.setText(options.logFile.getAbsolutePath());
-        chMode.setSelectedItem(options.logMode);
+        chStatMode.setSelectedItem(options.logMode);
+        chRunMode.setSelectedItem(options.runMode);
         JPanel down = new JPanel();
         down.add(btnOk);
         down.add(btnCancel);
@@ -113,7 +121,7 @@ final class OptionsDialog extends JDialog {
     private void loggingChanged() {
         boolean on = cbLog.isSelected();
         tfFile.setEnabled(on);
-        chMode.setEnabled(on);
+        chStatMode.setEnabled(on);
     }
 
     private Options validateInput() {
@@ -154,7 +162,7 @@ final class OptionsDialog extends JDialog {
         }
         return new Options(
             ampTol, timeTol, precision, useLog, logFile,
-            (StatModeEnum) chMode.getSelectedItem()
+            (StatModeEnum) chStatMode.getSelectedItem(), (RunMode) chRunMode.getSelectedItem()
         );
     }
 

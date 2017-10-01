@@ -424,7 +424,7 @@ public final class GraphGuiUtil {
                 for (int len = from; len <= to; len += step) {
                     Number length = a.evaluate((double) len);
                     Graph igraph = graph.withEdge(edge, length);
-                    ISchedule schedule = factory.newSchedule(igraph, options.ampTol, a);
+                    ISchedule schedule = factory.newSchedule(igraph, options.ampTol, options.runMode, a);
                     schedule.firstPhotons();
                     while (true) {
                         if (schedule.getCurrentTime() >= 10000) // todo: use clock time???

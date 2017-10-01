@@ -30,7 +30,7 @@ final class Running {
         Graph graph = panel.toGraph(a, null);
         if (graph.getEdgeNum() <= 0 || graph.getVertexNum() <= 0)
             throw new InitException("Graph is empty");
-        this.schedule = factory.newSchedule(graph, options.ampTol, a);
+        this.schedule = factory.newSchedule(graph, options.ampTol, options.runMode, a);
 
         calcThread = new Thread(new Runnable() {
             public void run() {

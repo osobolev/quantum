@@ -1,5 +1,6 @@
 package neuron.draw;
 
+import common.draw.RunMode;
 import common.events.ISchedule;
 import common.events.InitException;
 import common.events.ScheduleFactory;
@@ -23,7 +24,7 @@ final class NeuronScheduleFactory implements ScheduleFactory {
         this.tfDT = tfDT;
     }
 
-    public ISchedule newSchedule(Graph g, double ampTol, Arithmetic a) throws InitException {
+    public ISchedule newSchedule(Graph g, double ampTol, RunMode runMode, Arithmetic a) throws InitException {
         int numImpulses = ((Number) spinner.getValue()).intValue();
         double tauPeriod = parseTau(tfTauPeriod);
         double tauRestore = parseTau(tfTauRestore);

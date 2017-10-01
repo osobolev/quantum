@@ -1,5 +1,6 @@
 package quantum;
 
+import common.draw.RunMode;
 import common.events.ISchedule;
 import common.events.StatResult;
 import common.graph.Graph;
@@ -25,7 +26,7 @@ public final class ProfRun {
         SimpleEdge[] edges = model.toSimple(a);
         int numVertex = model.getNumVertex();
         Graph g = new Graph(new Integer[numVertex], edges);
-        ISchedule schedule = new Schedule(g, ISchedule.AMP_EPS, a);
+        ISchedule schedule = new Schedule(g, ISchedule.AMP_EPS, RunMode.NORMAL, a);
         schedule.firstPhotons();
         return schedule;
     }
