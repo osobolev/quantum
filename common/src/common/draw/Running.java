@@ -23,7 +23,7 @@ final class Running {
     private double delta = 0;
     private boolean inited = false;
 
-    Running(GraphPanel panel, final Options options, boolean showPhotons, ScheduleFactory factory) throws InitException {
+    Running(GraphPanel panel, Options options, boolean showPhotons, ScheduleFactory factory) throws InitException {
         this.panel = panel;
         this.showPhotons = showPhotons;
         Arithmetic a = Arithmetic.createArithmetic(options.timeTol, options.precision);
@@ -32,46 +32,44 @@ final class Running {
             throw new InitException("Graph is empty");
         this.schedule = factory.newSchedule(graph, options.ampTol, options.runMode, a);
 
-        calcThread = new Thread(new Runnable() {
-            public void run() {
-                init();
+        calcThread = new Thread(() -> {
+            init();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                //
+            }
+            PrintWriter w = null;
+            if (options.useLog) {
+                // todo: move logging to GraphPanel?
                 try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    //
+                    w = new PrintWriter(options.logFile);
+                } catch (FileNotFoundException ex) {
+                    ex.printStackTrace();
                 }
-                PrintWriter w = null;
-                if (options.useLog) {
-                    // todo: move logging to GraphPanel?
-                    try {
-                        w = new PrintWriter(options.logFile);
-                    } catch (FileNotFoundException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-                DecimalFormatSymbols dfs = DecimalFormatSymbols.getInstance();
-                char separator = dfs.getDecimalSeparator();
-                while (true) {
-                    synchronized (schedule) {
-                        if (!running)
-                            break;
-                    }
-                    if (w != null) {
-                        StatResult stat = schedule.getStat();
-                        w.print(stat.currentTime.toString().replace('.', separator));
-                        Iterator<String> values = options.logMode.mode.getValues(stat);
-                        while (values.hasNext()) {
-                            String value = values.next();
-                            w.print("\t" + value.replace('.', separator));
-                        }
-                        w.println();
-                    }
-                    if (!schedule.next())
+            }
+            DecimalFormatSymbols dfs = DecimalFormatSymbols.getInstance();
+            char separator = dfs.getDecimalSeparator();
+            while (true) {
+                synchronized (schedule) {
+                    if (!running)
                         break;
                 }
                 if (w != null) {
-                    w.close();
+                    StatResult stat = schedule.getStat();
+                    w.print(stat.currentTime.toString().replace('.', separator));
+                    Iterator<String> values = options.logMode.mode.getValues(stat);
+                    while (values.hasNext()) {
+                        String value = values.next();
+                        w.print("\t" + value.replace('.', separator));
+                    }
+                    w.println();
                 }
+                if (!schedule.next())
+                    break;
+            }
+            if (w != null) {
+                w.close();
             }
         });
     }

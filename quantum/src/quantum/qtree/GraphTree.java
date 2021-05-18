@@ -22,7 +22,7 @@ final class GraphTree extends ICalculation {
     private final double k13 = -1. / 3.;
 
     /**
-     * @param initNode от 0 до (2^(len - 1) - 1)
+     * @param initNode РѕС‚ 0 РґРѕ (2^(len - 1) - 1)
      */
     GraphTree(int len, int initNode, int treeLength) {
         this.len = len;

@@ -77,7 +77,7 @@ public final class Arithmetic {
         BigDecimal x0 = BigDecimal.ZERO;
         BigDecimal x1 = BigDecimal.valueOf(Math.sqrt(a.doubleValue()));
 
-        while (!x0.equals(x1)) {
+        while (x0.compareTo(x1) != 0) {
             x0 = x1;
             x1 = a.divide(x0, scale, BigDecimal.ROUND_HALF_UP);
             x1 = x1.add(x0);

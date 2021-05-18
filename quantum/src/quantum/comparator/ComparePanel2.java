@@ -17,8 +17,8 @@ final class ComparePanel2 extends JComponent {
 
     private final List<Double> times;
     private final List<Double> photons;
-    private final List<Integer> toCompare = new ArrayList<Integer>();
-    private final List<double[]> compareCoeffs = new ArrayList<double[]>();
+    private final List<Integer> toCompare = new ArrayList<>();
+    private final List<double[]> compareCoeffs = new ArrayList<>();
 
     private final NumberFormat cdf;
 

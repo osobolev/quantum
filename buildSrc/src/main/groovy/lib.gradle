@@ -1,0 +1,24 @@
+plugins {
+    id("java-library")
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+compileJava {
+    options.encoding = "UTF-8"
+    options.compilerArgs.add("-Xlint:all,-cast,-serial")
+}
+
+sourceSets {
+    main {
+        java.srcDir("src")
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+clean.doLast {
+    delete("$projectDir/out")
+}

@@ -3,7 +3,7 @@ package quantum.qtree;
 public final class SymmTree {
 
     /*
-     * Achtung! Теперь это не амплитуда, а (амплитуда * val^(j/2))
+     * Achtung! РўРµРїРµСЂСЊ СЌС‚Рѕ РЅРµ Р°РјРїР»РёС‚СѓРґР°, Р° (Р°РјРїР»РёС‚СѓРґР° * val^(j/2))
      */
     private double[] ampForw;
     private double[] ampBack;
@@ -35,7 +35,7 @@ public final class SymmTree {
     }
 
     /**
-     * @return амплитуда, вытекающая из дерева
+     * @return Р°РјРїР»РёС‚СѓРґР°, РІС‹С‚РµРєР°СЋС‰Р°СЏ РёР· РґРµСЂРµРІР°
      */
     public Double prepareStep() {
         if (i >= len - 1)
@@ -59,7 +59,7 @@ public final class SymmTree {
     }
 
     /**
-     * @param addAmp амплитуда, втекающая в дерево
+     * @param addAmp Р°РјРїР»РёС‚СѓРґР°, РІС‚РµРєР°СЋС‰Р°СЏ РІ РґРµСЂРµРІРѕ
      */
     public void completeStep(double addAmp) {
         newAmpForw[0] += addAmp;

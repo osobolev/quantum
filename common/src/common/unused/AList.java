@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 public final class AList<T extends Comparable<T>> extends AbstractList<T> {
 
-    private final ArrayList<T> list = new ArrayList<T>();
+    private final ArrayList<T> list = new ArrayList<>();
 
     public void binarySearch(T value, Found found) {
         found.index = Collections.binarySearch(list, value);

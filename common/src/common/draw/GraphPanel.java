@@ -58,7 +58,7 @@ final class GraphPanel extends JComponent {
     private final PanelOptions options;
     private Integer revision = null;
 
-    GraphPanel(final PanelOptions options, StatModeEnum mode, final SequenceRunner runner) {
+    GraphPanel(PanelOptions options, StatModeEnum mode, SequenceRunner runner) {
         this.options = options;
         this.mode = mode;
 
@@ -586,8 +586,8 @@ final class GraphPanel extends JComponent {
         return g;
     }
 
-    private final List<Double> times = new ArrayList<Double>();
-    private final List<Double> photons = new ArrayList<Double>();
+    private final List<Double> times = new ArrayList<>();
+    private final List<Double> photons = new ArrayList<>();
     private int degree = 0;
     private double[] coeffs = null;
     private double needTime = 0;

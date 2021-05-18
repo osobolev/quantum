@@ -27,7 +27,7 @@ abstract class StatMode {
             return null;
         }
 
-        public final Iterator<String> getValues(final StatResult stat) {
+        public final Iterator<String> getValues(StatResult stat) {
             return new IntIterator(stat.g.getEdgeNum()) {
                 protected String getString(int i) {
                     return getEdgeValue(stat, i);
@@ -50,7 +50,7 @@ abstract class StatMode {
             return null;
         }
 
-        public final Iterator<String> getValues(final StatResult stat) {
+        public final Iterator<String> getValues(StatResult stat) {
             return new IntIterator(stat.g.getVertexNum()) {
                 protected String getString(int i) {
                     return getNodeValue(stat, i);
@@ -129,7 +129,7 @@ abstract class StatMode {
 
     public abstract String getNodeValue(StatResult stat, int node);
 
-    public Iterator<String> getValues(final StatResult stat) {
+    public Iterator<String> getValues(StatResult stat) {
         return new IntIterator(stat.g.getEdgeNum()) {
             protected String getString(int i) {
                 return getEdgeValue(stat, i);

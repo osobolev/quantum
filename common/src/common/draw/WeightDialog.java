@@ -5,15 +5,13 @@ import common.math.JSRunner;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 final class WeightDialog extends JDialog {
 
     private final JSRunner runner = new JSRunner(Arithmetic.createArithmetic(0, 0));
 
     private final JTextField tfWeight;
-    private final JComboBox chStart = new JComboBox(new String[] {"-", "Forward", "Back"});
+    private final JComboBox<String> chStart = new JComboBox<>(new String[] {"-", "Forward", "Back"});
     private final JCheckBox cbStart = new JCheckBox("Start edge");
     private final JSpinner tfFrom = new JSpinner(new SpinnerNumberModel(1, 1, 1000000, 1));
     private final JSpinner tfTo = new JSpinner(new SpinnerNumberModel(1, 1, 1000000, 1));
@@ -65,7 +63,7 @@ final class WeightDialog extends JDialog {
             ));
         }
 
-        final JTabbedPane tab = new JTabbedPane();
+        JTabbedPane tab = new JTabbedPane();
         tab.addTab("Edge", center1);
         if (runner != null) {
             JPanel center2 = new JPanel(new GridBagLayout());
@@ -93,38 +91,28 @@ final class WeightDialog extends JDialog {
         JPanel down = new JPanel();
         down.add(btnOk);
         down.add(btnCancel);
-        btnOk.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (tab.getSelectedIndex() == 1) {
-                    int from = ((Number) tfFrom.getValue()).intValue();
-                    int to = ((Number) tfTo.getValue()).intValue();
-                    int step = ((Number) tfStep.getValue()).intValue();
-                    range = new int[] {from, to, step};
+        btnOk.addActionListener(e -> {
+            if (tab.getSelectedIndex() == 1) {
+                int from = ((Number) tfFrom.getValue()).intValue();
+                int to = ((Number) tfTo.getValue()).intValue();
+                int step = ((Number) tfStep.getValue()).intValue();
+                range = new int[] {from, to, step};
+                dispose();
+            } else {
+                String s = tfWeight.getText().replace(',', '.');
+                if (validate(s)) {
+                    result = s;
+                    ok = true;
                     dispose();
-                } else {
-                    String s = tfWeight.getText().replace(',', '.');
-                    if (validate(s)) {
-                        result = s;
-                        ok = true;
-                        dispose();
-                    }
                 }
             }
         });
-        btnCancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
+        btnCancel.addActionListener(e -> dispose());
         add(tab, BorderLayout.CENTER);
         add(down, BorderLayout.SOUTH);
         getRootPane().setDefaultButton(btnOk);
 
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                tfWeight.requestFocusInWindow();
-            }
-        });
+        SwingUtilities.invokeLater(tfWeight::requestFocusInWindow);
 
         pack();
         setLocationRelativeTo(owner);

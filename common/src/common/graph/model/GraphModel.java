@@ -11,15 +11,15 @@ import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public final class GraphModel {
 
     private static final String NO_WEIGHT = "-";
 
-    private final List<Node> nodes = new ArrayList<Node>();
-    private final List<Edge> edges = new ArrayList<Edge>();
+    private final List<Node> nodes = new ArrayList<>();
+    private final List<Edge> edges = new ArrayList<>();
 
     private Double coeff = null;
 
@@ -205,8 +205,7 @@ public final class GraphModel {
     public void load(Readable file) {
         reset();
 
-        Scanner r = new Scanner(file);
-        try {
+        try (Scanner r = new Scanner(file)) {
             r.useLocale(Locale.US);
 
             int nnodes = r.nextInt();
@@ -239,7 +238,7 @@ public final class GraphModel {
                     arc = new Point(arcX, arcY);
                 }
                 Edge edge = new Edge(nodes.get(n1), nodes.get(n2), weight);
-                if (r.hasNext("-|>|<")) {
+                if (r.hasNext("[-><]")) {
                     String dir = r.next();
                     if (">".equals(dir)) {
                         edge.startForward = true;
@@ -250,8 +249,6 @@ public final class GraphModel {
                 edge.arc = arc;
                 edges.add(edge);
             }
-        } finally {
-            r.close();
         }
     }
 

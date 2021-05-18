@@ -1,5 +1,6 @@
 package quantum.draw;
 
+import common.draw.GraphGuiUtil;
 import common.draw.ShowFrameBase;
 import common.events.InitException;
 
@@ -11,7 +12,15 @@ public final class ShowFrame extends ShowFrameBase {
         super(args, "Graph Demo", GraphFrame.PO, new QuantumScheduleFactory(), null);
     }
 
-    public static void main(String[] args) throws Exception {
-        new ShowFrame(args);
+    public static void main(String[] args) {
+        if (args.length < 1) {
+            System.err.println("Usage: show [<1 to auto-start>] <graph file>");
+            return;
+        }
+        try {
+            new ShowFrame(args);
+        } catch (Exception ex) {
+            GraphGuiUtil.handleException(null, ex);
+        }
     }
 }

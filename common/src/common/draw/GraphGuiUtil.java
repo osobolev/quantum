@@ -9,13 +9,10 @@ import common.math.Arithmetic;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,11 +33,7 @@ public final class GraphGuiUtil {
 
     private Running running = null;
     public final JSlider speed = new JSlider(0, 1000, 500);
-    private final Timer timer = new Timer(200, new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            showRunning();
-        }
-    });
+    private final Timer timer = new Timer(200, e -> showRunning());
     public final AbstractAction runAction = new AbstractAction() {
         public void actionPerformed(ActionEvent e) {
             runModel();
@@ -69,22 +62,14 @@ public final class GraphGuiUtil {
         StatModeEnum displayMode = SwitchPanel.loadMode();
         SequenceRunner runner;
         if (runSequence) {
-            runner = new SequenceRunner() {
-                public void runAndShow(int edge, int from, int to, int step) {
-                    runSequence(edge, from, to, step);
-                }
-            };
+            runner = this::runSequence;
         } else {
             runner = null;
         }
         this.panel = new GraphPanel(po, displayMode, runner);
 
         stopModel();
-        speed.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                setSpeed();
-            }
-        });
+        speed.addChangeListener(e -> setSpeed());
 
         if (file != null || source != null) {
             try {
@@ -414,13 +399,13 @@ public final class GraphGuiUtil {
         }
     }
 
-    private void runSequence(final int edge, final int from, final int to, final int step) {
+    private void runSequence(int edge, int from, int to, int step) {
         SwingWorker<List<String[]>, Void> worker = new SwingWorker<List<String[]>, Void>() {
 
             protected List<String[]> doInBackground() throws Exception {
                 Arithmetic a = getArithmetic();
                 Graph graph = panel.toGraph(a, null);
-                List<String[]> results = new ArrayList<String[]>();
+                List<String[]> results = new ArrayList<>();
                 for (int len = from; len <= to; len += step) {
                     Number length = a.evaluate((double) len);
                     Graph igraph = graph.withEdge(edge, length);

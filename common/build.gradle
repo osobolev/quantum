@@ -1,0 +1,7 @@
+plugins {
+    id("lib")
+}
+
+dependencies {
+    implementation("org.apfloat:apfloat:1.9.1")
+}

@@ -46,7 +46,7 @@ public final class LList<T extends Comparable<T>> implements Iterable<T> {
         int low = 0;
         int high = size - 1;
         Entry<T> elow = head;
-        int shiftLow = 0; // индекс elow.list[0] во всем списке
+        int shiftLow = 0; // РёРЅРґРµРєСЃ elow.list[0] РІРѕ РІСЃРµРј СЃРїРёСЃРєРµ
         while (low <= high) {
             int mid = (low + high) >>> 1;
             int delta = mid - shiftLow;
@@ -89,7 +89,7 @@ public final class LList<T extends Comparable<T>> implements Iterable<T> {
 
     public void insert(Found where, T value) {
         if (size <= 0) {
-            Entry<T> entry = new Entry<T>();
+            Entry<T> entry = new Entry<>();
             entry.size = 1;
             entry.list[0] = value;
             head = tail = entry;
@@ -105,7 +105,7 @@ public final class LList<T extends Comparable<T>> implements Iterable<T> {
                         next.list[0] = value;
                         next.size++;
                     } else {
-                        Entry<T> entry = new Entry<T>();
+                        Entry<T> entry = new Entry<>();
                         entry.size = 1;
                         entry.list[0] = value;
 
@@ -120,7 +120,7 @@ public final class LList<T extends Comparable<T>> implements Iterable<T> {
                         System.arraycopy(whereEntry.list, index, whereEntry.list, index + 1, entrySize - index - 1);
                         whereEntry.list[index] = value;
                     } else {
-                        Entry<T> entry = new Entry<T>();
+                        Entry<T> entry = new Entry<>();
                         entry.size = 1;
                         entry.list[0] = whereEntry.list[entrySize - 1];
                         System.arraycopy(whereEntry.list, index, whereEntry.list, index + 1, entrySize - index - 1);
@@ -248,7 +248,7 @@ public final class LList<T extends Comparable<T>> implements Iterable<T> {
 
     public static void main(String[] args) throws FileNotFoundException {
         Random rnd = new Random(0);
-        LList<Integer> list = new LList<Integer>();
+        LList<Integer> list = new LList<>();
         long t0 = System.currentTimeMillis();
         Found found = new Found();
         for (int i = 0; i < 100000; i++) {

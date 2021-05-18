@@ -12,7 +12,7 @@ public abstract class BaseSchedule<E> extends ISchedule {
 
     protected final Graph g;
     protected final Arithmetic a;
-    protected final TreeMap<Number, List<E>> list = new TreeMap<Number, List<E>>();
+    protected final TreeMap<Number, List<E>> list = new TreeMap<>();
 
     protected final Object lock = new Object();
     protected final EventData<E> extractor;

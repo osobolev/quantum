@@ -167,7 +167,7 @@ public final class Schedule extends BaseSchedule<Event> {
     }
 
     protected Map<Integer, ? extends NodeState> getNodeState(double time) {
-        Map<Integer, DisplayNodeState> map = new HashMap<Integer, DisplayNodeState>();
+        Map<Integer, DisplayNodeState> map = new HashMap<>();
         double tauPeriod = this.tauPeriod.doubleValue();
         double tauRestore = this.tauRestore.doubleValue();
         for (int i = 0; i < states.length; i++) {

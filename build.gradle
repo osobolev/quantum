@@ -1,0 +1,8 @@
+task distr(type: Copy) {
+    from("config")
+    into("$rootDir/distr")
+}
+
+task clean(type: Delete) {
+    delete("distr")
+}

@@ -86,7 +86,7 @@ public final class Schedule extends BaseSchedule<SmallEntry> {
             boolean[][] dirs = new boolean[g.getVertexNum()][g.getEdgeNum()];
             currentTime = first;
             if (runMode == RunMode.NO_BACK_REALLY) {
-                // todo: σχες οεςελό
+                // todo: ΡƒΡ‡ΠµΡ‚ ΠΏΠµΡ‚ΠµΠ»Ρ
                 boolean[][] incoming = new boolean[g.getVertexNum()][g.getEdgeNum()];
                 for (SmallEntry entry : e) {
                     int vertex = g.getEdgeSide(entry.edge, entry.forward);

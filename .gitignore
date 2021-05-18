@@ -1,5 +1,6 @@
-*.html
-graph.jar
-neuro.jar
-tree.jar
-grcalc.exe
+build/
+.gradle/
+out/
+.idea/
+*.iml
+/distr/

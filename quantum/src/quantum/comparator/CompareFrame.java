@@ -1,7 +1,6 @@
 package quantum.comparator;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.io.IOException;
@@ -35,11 +34,7 @@ public final class CompareFrame extends JFrame {
 
         panel1 = new ComparePanel1(times, photons);
         slider1 = new JSlider(0, times.size(), times.size());
-        slider1.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                syncPanel1();
-            }
-        });
+        slider1.addChangeListener(e -> syncPanel1());
         syncPanel1();
         JPanel p1 = new JPanel(new BorderLayout());
         p1.add(panel1, BorderLayout.CENTER);
@@ -56,11 +51,7 @@ public final class CompareFrame extends JFrame {
 
         panel2 = new ComparePanel2(times, photons);
         slider2 = new JSlider(0, times.size(), times.size() / 10);
-        slider2.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                syncPanel2();
-            }
-        });
+        slider2.addChangeListener(e -> syncPanel2());
         syncPanel2();
         JPanel p2 = new JPanel(new BorderLayout());
         p2.add(panel2, BorderLayout.CENTER);
@@ -71,11 +62,7 @@ public final class CompareFrame extends JFrame {
 
         setDefaultCloseOperation(standalone ? EXIT_ON_CLOSE : DISPOSE_ON_CLOSE);
 
-        ChangeListener listener = new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                setCompare();
-            }
-        };
+        ChangeListener listener = e -> setCompare();
         spin1.addChangeListener(listener);
         spin2.addChangeListener(listener);
         spin3.addChangeListener(listener);
@@ -87,25 +74,24 @@ public final class CompareFrame extends JFrame {
     }
 
     private void setCompare() {
-        SortedSet<Integer> set = new TreeSet<Integer>();
+        SortedSet<Integer> set = new TreeSet<>();
         set.add((Integer) spin1.getValue());
         set.add((Integer) spin2.getValue());
         set.add((Integer) spin3.getValue());
-        List<Integer> degrees = new ArrayList<Integer>(set);
+        List<Integer> degrees = new ArrayList<>(set);
         panel1.setCompare(degrees);
         panel2.setCompare(degrees);
     }
 
     public static void main(String[] args) throws IOException {
-        String name;
-        if (args.length > 0) {
-            name = args[0];
-        } else {
-            name = "D:\\home\\oleg\\miscprogs\\quantum\\cpp\\newer\\x_2b.out";
+        if (args.length < 1) {
+            System.err.println("Usage: compare <file>");
+            return;
         }
+        String name = args[0];
         TableReader data = TableReader.read(name);
         List<Double> main = data.columns.get(0);
-        List<Double> rest = new ArrayList<Double>(main.size());
+        List<Double> rest = new ArrayList<>(main.size());
         for (int i = 0; i < main.size(); i++) {
             Double value = main.get(i);
             double time = data.times.get(i).doubleValue();

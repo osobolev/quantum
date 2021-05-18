@@ -5,16 +5,12 @@ import common.events.ScheduleFactory;
 
 import javax.imageio.stream.FileImageOutputStream;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public abstract class ShowFrameBase extends JFrame {
@@ -25,11 +21,7 @@ public abstract class ShowFrameBase extends JFrame {
     private final GraphPanel panel;
 
     private final Running running;
-    private final Timer timer = new Timer(20, new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            showRunning();
-        }
-    });
+    private final Timer timer = new Timer(20, e -> showRunning());
     private final JSlider speed = new JSlider(0, 1000, 500);
     private final int fps;
 
@@ -45,6 +37,8 @@ public abstract class ShowFrameBase extends JFrame {
 
         this.panel = new GraphPanel(po, StatModeEnum.ENERGY, runner);
 
+        panel.load(file);
+
         if (fps > 0) {
             String name = file.getName();
             int p = name.lastIndexOf('.');
@@ -58,12 +52,7 @@ public abstract class ShowFrameBase extends JFrame {
         }
         timer.stop();
 
-        try {
-            panel.load(file);
-            setTitle();
-        } catch (FileNotFoundException ex) {
-            handleException(ex);
-        }
+        setTitle();
 
         Options options = Options.load(GraphGuiUtil.getPrefs());
         this.running = new Running(panel, options, true, factory);
@@ -84,11 +73,7 @@ public abstract class ShowFrameBase extends JFrame {
             add(down, BorderLayout.SOUTH);
         }
 
-        speed.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                setSpeed();
-            }
-        });
+        speed.addChangeListener(e -> setSpeed());
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -115,10 +100,6 @@ public abstract class ShowFrameBase extends JFrame {
     private void setSpeed() {
         int value = speed.getValue();
         running.setSpeed(value / 1000.0);
-    }
-
-    private void handleException(Exception ex) {
-        GraphGuiUtil.handleException(this, ex);
     }
 
     private void doRun() {

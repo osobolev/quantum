@@ -14,9 +14,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-// todo: передавать double в бинарном виде;
-// todo: почему кол-во фотонов не зависит от длины ребра?
-// todo: когда-то фотоны все-таки изничтожаются?
+// todo: РїРµСЂРµРґР°РІР°С‚СЊ double РІ Р±РёРЅР°СЂРЅРѕРј РІРёРґРµ;
+// todo: РїРѕС‡РµРјСѓ РєРѕР»-РІРѕ С„РѕС‚РѕРЅРѕРІ РЅРµ Р·Р°РІРёСЃРёС‚ РѕС‚ РґР»РёРЅС‹ СЂРµР±СЂР°?
+// todo: РєРѕРіРґР°-С‚Рѕ С„РѕС‚РѕРЅС‹ РІСЃРµ-С‚Р°РєРё РёР·РЅРёС‡С‚РѕР¶Р°СЋС‚СЃСЏ?
 public final class ProfRun {
 
     public static ISchedule loadGraph(File file, double timeTol, int precision) throws FileNotFoundException {

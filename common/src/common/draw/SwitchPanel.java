@@ -2,24 +2,20 @@ package common.draw;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 final class SwitchPanel extends JPanel {
 
-    SwitchPanel(final GraphPanel panel) {
+    SwitchPanel(GraphPanel panel) {
         StatModeEnum[] values = StatModeEnum.values();
         setLayout(new GridLayout(values.length, 1));
         ButtonGroup group = new ButtonGroup();
-        for (final StatModeEnum value : values) {
+        for (StatModeEnum value : values) {
             JRadioButton butt = new JRadioButton(value.toString());
-            butt.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    saveMode(value);
-                    panel.setMode(value);
-                }
+            butt.addActionListener(e -> {
+                saveMode(value);
+                panel.setMode(value);
             });
             add(butt);
             group.add(butt);

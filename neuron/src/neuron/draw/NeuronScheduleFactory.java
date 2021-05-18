@@ -31,15 +31,11 @@ final class NeuronScheduleFactory implements ScheduleFactory {
         return new Schedule(g, a, numImpulses, tauPeriod, tauRestore, tfDT);
     }
 
-    private static double parseTau(final JTextField tfTau) throws InitException {
+    private static double parseTau(JTextField tfTau) throws InitException {
         try {
             return Double.parseDouble(tfTau.getText().replace(',', '.'));
         } catch (NumberFormatException ex) {
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    tfTau.requestFocusInWindow();
-                }
-            });
+            SwingUtilities.invokeLater(tfTau::requestFocusInWindow);
             throw new InitException("Enter valid tau value");
         }
     }

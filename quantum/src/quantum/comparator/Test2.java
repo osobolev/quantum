@@ -3,7 +3,6 @@ package quantum.comparator;
 import common.math.PolyUtil;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 
 public class Test2 {
@@ -22,11 +21,7 @@ public class Test2 {
 //        System.out.println(c2 - c1);
 //        System.out.println(ed / (c2 - c1));
 //        System.exit(1);
-        File[] files = new File("C:\\work\\projects\\quantum\\cpp\\cmp").listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.toLowerCase().startsWith("out_");
-            }
-        });
+        File[] files = new File("C:\\work\\projects\\quantum\\cpp\\cmp").listFiles((dir, name) -> name.toLowerCase().startsWith("out_"));
         double[] k = new double[files.length];
         for (int i = 0; i < files.length; i++) {
             File file = files[i];

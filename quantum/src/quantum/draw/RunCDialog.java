@@ -2,8 +2,6 @@ package quantum.draw;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -17,13 +15,10 @@ final class RunCDialog extends JDialog {
         private String getTime() {
             try {
                 if (status.exists()) {
-                    BufferedReader rdr = new BufferedReader(new FileReader(status));
-                    try {
+                    try (BufferedReader rdr = new BufferedReader(new FileReader(status))) {
                         String str = rdr.readLine();
                         double time = Double.parseDouble(str);
                         return NumberFormat.getNumberInstance().format(time);
-                    } finally {
-                        rdr.close();
                     }
                 } else {
                     return null;
@@ -62,14 +57,12 @@ final class RunCDialog extends JDialog {
                 } catch (IllegalThreadStateException ex) {
                     // ignore
                 }
-                final String time = getTime();
+                String time = getTime();
                 if (time != null) {
-                    final String running = formatTime((System.currentTimeMillis() - t0) / 1000);
-                    SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            lblTime.setText("Running time: " + running);
-                            bar.setString("T=" + time);
-                        }
+                    String running = formatTime((System.currentTimeMillis() - t0) / 1000);
+                    SwingUtilities.invokeLater(() -> {
+                        lblTime.setText("Running time: " + running);
+                        bar.setString("T=" + time);
                     });
                 }
                 try {
@@ -79,13 +72,11 @@ final class RunCDialog extends JDialog {
                 }
             }
             stop.delete();
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    bar.setValue(100);
-                    dispose();
-                    JOptionPane.showMessageDialog(getOwner(), "Ðåçóëüòàòû äî T=" + getTime() + " â ôàéëå " + out.getAbsolutePath());
-                    status.delete();
-                }
+            SwingUtilities.invokeLater(() -> {
+                bar.setValue(100);
+                dispose();
+                JOptionPane.showMessageDialog(getOwner(), "Ð ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ñ‹ Ð´Ð¾ T=" + getTime() + " Ð² Ñ„Ð°Ð¹Ð»Ðµ " + out.getAbsolutePath());
+                status.delete();
             });
         }
     }
@@ -97,7 +88,7 @@ final class RunCDialog extends JDialog {
     private final JLabel lblTime = new JLabel(" ");
     private final JProgressBar bar = new JProgressBar(0, 100);
 
-    RunCDialog(Frame owner, File status, final File stop, File out, Process process) {
+    RunCDialog(Frame owner, File status, File stop, File out, Process process) {
         super(owner, "Running C...", true);
         this.status = status;
         this.stop = stop;
@@ -114,15 +105,13 @@ final class RunCDialog extends JDialog {
 
         add(bar, BorderLayout.CENTER);
 
-        final JButton btnStop = new JButton("Stop");
-        btnStop.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    stop.createNewFile();
-                    btnStop.setEnabled(false);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+        JButton btnStop = new JButton("Stop");
+        btnStop.addActionListener(e -> {
+            try {
+                stop.createNewFile();
+                btnStop.setEnabled(false);
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         });
         JPanel butt = new JPanel();

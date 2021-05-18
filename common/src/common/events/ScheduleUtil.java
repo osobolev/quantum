@@ -29,7 +29,7 @@ public final class ScheduleUtil {
                 }
             }
             if (addTo == null) {
-                List<T> newList = new ArrayList<T>();
+                List<T> newList = new ArrayList<>();
                 newList.add(newEntry);
                 list.put(time, newList);
             } else {
@@ -74,7 +74,7 @@ public final class ScheduleUtil {
                 break;
             }
         }
-        Map<Integer, List<Double>> map = new HashMap<Integer, List<Double>>();
+        Map<Integer, List<Double>> map = new HashMap<>();
         for (Map.Entry<K, List<T>> entries : list.entrySet()) {
             double arrival = entries.getKey().doubleValue();
             for (T entry : entries.getValue()) {
@@ -87,11 +87,7 @@ public final class ScheduleUtil {
                 if (!extractor.isForward(entry)) {
                     position = 1 - position;
                 }
-                List<Double> showList = map.get(edge);
-                if (showList == null) {
-                    showList = new ArrayList<Double>();
-                    map.put(edge, showList);
-                }
+                List<Double> showList = map.computeIfAbsent(edge, k -> new ArrayList<>());
                 showList.add(position);
             }
         }

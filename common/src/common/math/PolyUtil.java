@@ -7,7 +7,7 @@ import java.util.List;
 public final class PolyUtil {
 
     /**
-     * @param numCoeff число коэффициентов многочлена (т.е. степень будет на 1 меньше)
+     * @param numCoeff С‡РёСЃР»Рѕ РєРѕСЌС„С„РёС†РёРµРЅС‚РѕРІ РјРЅРѕРіРѕС‡Р»РµРЅР° (С‚.Рµ. СЃС‚РµРїРµРЅСЊ Р±СѓРґРµС‚ РЅР° 1 РјРµРЅСЊС€Рµ)
      */
     public static double[] leastSquares(List<Double> times, List<Double> photons, int numCoeff) {
         if (times.size() < numCoeff)

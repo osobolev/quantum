@@ -5,7 +5,7 @@ import java.util.TreeMap;
 
 public final class TList<T extends Comparable<T>> extends AbstractList<T> {
 
-    private final TreeMap<T, T> list = new TreeMap<T, T>();
+    private final TreeMap<T, T> list = new TreeMap<>();
 
     public void binarySearch(T value, Found found) {
         Comparable<T> existing = list.get(value);

@@ -4,8 +4,6 @@ import common.draw.GraphGuiUtil;
 import common.draw.PanelOptions;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
@@ -31,11 +29,7 @@ public final class GraphFrame extends JFrame {
         tfTauPeriod = new JTextField(prefs.get("tau.period", "1"), 4);
         tfTauRestore = new JTextField(prefs.get("tau.restore", "1"), 4);
         tfDT = new JTextField(prefs.get("mean.dt", "1"), 4);
-        tfStartImpulses.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                saveSettings();
-            }
-        });
+        tfStartImpulses.addChangeListener(e -> saveSettings());
         DocumentListener documentListener = new DocumentListener() {
 
             public void insertUpdate(DocumentEvent e) {

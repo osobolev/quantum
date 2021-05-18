@@ -2,8 +2,6 @@ package common.draw;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -14,8 +12,8 @@ final class OptionsDialog extends JDialog {
     private final JTextField tfPrecision = new JTextField(10);
     private final JCheckBox cbLog = new JCheckBox("Print to log");
     private final JTextField tfFile = new JTextField(10);
-    private final JComboBox chStatMode = new JComboBox(StatModeEnum.values());
-    private final JComboBox chRunMode = new JComboBox(RunMode.values());
+    private final JComboBox<StatModeEnum> chStatMode = new JComboBox<>(StatModeEnum.values());
+    private final JComboBox<RunMode> chRunMode = new JComboBox<>(RunMode.values());
     private final JButton btnOk = new JButton("OK");
     private final JButton btnCancel = new JButton("Cancel");
 
@@ -90,26 +88,16 @@ final class OptionsDialog extends JDialog {
         JPanel down = new JPanel();
         down.add(btnOk);
         down.add(btnCancel);
-        cbLog.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                loggingChanged();
-            }
-        });
+        cbLog.addActionListener(e -> loggingChanged());
         loggingChanged();
-        btnOk.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                result = validateInput();
-                if (result != null) {
-                    ok = true;
-                    dispose();
-                }
-            }
-        });
-        btnCancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        btnOk.addActionListener(e -> {
+            result = validateInput();
+            if (result != null) {
+                ok = true;
                 dispose();
             }
         });
+        btnCancel.addActionListener(e -> dispose());
         add(center, BorderLayout.CENTER);
         add(down, BorderLayout.SOUTH);
         getRootPane().setDefaultButton(btnOk);

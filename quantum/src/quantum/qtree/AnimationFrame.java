@@ -3,14 +3,9 @@ package quantum.qtree;
 import common.draw.VersionUtil;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -20,11 +15,7 @@ public final class AnimationFrame extends JFrame {
     private static final int DELAY = 200;
 
     private final AnimationPanel panel;
-    private final Timer timer = new Timer(DELAY, new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            calculate();
-        }
-    });
+    private final Timer timer = new Timer(DELAY, e -> calculate());
     private final JSlider delaySlider = new JSlider(0, 1000, DELAY);
     private final JSlider scaleSlider = new JSlider(0, 100, 0);
     private final JButton btnPicture = new JButton("Save GIF");
@@ -35,7 +26,7 @@ public final class AnimationFrame extends JFrame {
     private final JSpinner txtVal2;
     private final JSpinner txtTail = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
     private final JCheckBox cbSymmetric = new JCheckBox("Symmetric start");
-    private final JComboBox chCase = new JComboBox(TreeMode.values());
+    private final JComboBox<TreeMode> chCase = new JComboBox<>(TreeMode.values());
 
     private ICalculation calculation = null;
 
@@ -45,11 +36,9 @@ public final class AnimationFrame extends JFrame {
         txtVal1 = new JSpinner(new SpinnerNumberModel(val, 1, 10, 1));
         txtVal2 = new JSpinner(new SpinnerNumberModel(val, 1, 10, 1));
         chCase.setSelectedItem(TreeMode.PASCAL);
-        chCase.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    enableDisable();
-                }
+        chCase.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                enableDisable();
             }
         });
         enableDisable();
@@ -69,18 +58,16 @@ public final class AnimationFrame extends JFrame {
         up.add(chCase);
         up.add(cbSymmetric);
         up.add(btnStart);
-        btnStart.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                int count = ((Integer) txtCount.getValue()).intValue();
-                int val1 = ((Integer) txtVal1.getValue()).intValue();
-                int val2 = ((Integer) txtVal2.getValue()).intValue();
-                int tail = ((Integer) txtTail.getValue()).intValue();
-                boolean symmetric = cbSymmetric.isSelected();
-                TreeMode mode = (TreeMode) chCase.getSelectedItem();
-                calculation = mode.create(count, val1, val2, symmetric, tail);
-                panel.setCount(calculation.getCount(), calculation.getCenter());
-                timer.start();
-            }
+        btnStart.addActionListener(e -> {
+            int count1 = ((Integer) txtCount.getValue()).intValue();
+            int val1 = ((Integer) txtVal1.getValue()).intValue();
+            int val2 = ((Integer) txtVal2.getValue()).intValue();
+            int tail = ((Integer) txtTail.getValue()).intValue();
+            boolean symmetric = cbSymmetric.isSelected();
+            TreeMode mode = (TreeMode) chCase.getSelectedItem();
+            calculation = mode.create(count1, val1, val2, symmetric, tail);
+            panel.setCount(calculation.getCount(), calculation.getCenter());
+            timer.start();
         });
         add(up, BorderLayout.NORTH);
 
@@ -91,31 +78,15 @@ public final class AnimationFrame extends JFrame {
         down.add(scaleSlider);
         down.add(btnPicture);
         down.add(btnData);
-        delaySlider.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                timer.setDelay(delaySlider.getValue());
-            }
-        });
+        delaySlider.addChangeListener(e -> timer.setDelay(delaySlider.getValue()));
         delaySlider.setPaintTicks(true);
         delaySlider.setMajorTickSpacing(100);
-        scaleSlider.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                setScale();
-            }
-        });
+        scaleSlider.addChangeListener(e -> setScale());
         scaleSlider.setPaintTicks(true);
         scaleSlider.setMajorTickSpacing(10);
         setScale();
-        btnPicture.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                saveGif();
-            }
-        });
-        btnData.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                saveText();
-            }
-        });
+        btnPicture.addActionListener(e -> saveGif());
+        btnData.addActionListener(e -> saveText());
         add(down, BorderLayout.SOUTH);
 
         try {

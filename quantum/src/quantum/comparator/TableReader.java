@@ -24,8 +24,8 @@ public final class TableReader {
 
     public static TableReader read(File file) throws IOException {
         BufferedReader rdr = new BufferedReader(new FileReader(file));
-        List<Double> times = new ArrayList<Double>();
-        List<List<Double>> columns = new ArrayList<List<Double>>();
+        List<Double> times = new ArrayList<>();
+        List<List<Double>> columns = new ArrayList<>();
         while (true) {
             String line = rdr.readLine();
             if (line == null)
@@ -41,7 +41,7 @@ public final class TableReader {
                 if (t.indexOf('.') >= 0)
                     continue;
                 while (columns.size() <= col) {
-                    columns.add(new ArrayList<Double>());
+                    columns.add(new ArrayList<>());
                 }
                 columns.get(col).add(new Double(t.trim()));
                 col++;

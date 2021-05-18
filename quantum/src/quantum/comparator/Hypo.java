@@ -3,7 +3,6 @@ package quantum.comparator;
 import common.math.PolyUtil;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -41,27 +40,23 @@ public final class Hypo {
     }
 
     private static FileTable[] read(File dir) throws IOException {
-        File[] files = dir.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.toLowerCase().startsWith("out");
-            }
-        });
+        File[] files = dir.listFiles((d, name) -> name.toLowerCase().startsWith("out"));
         FileTable[] tables = new FileTable[files.length];
         for (int i = 0; i < files.length; i++) {
             File file = files[i];
             tables[i] = new FileTable(file);
         }
-        Arrays.sort(tables, new Comparator<FileTable>() {
-            public int compare(FileTable f1, FileTable f2) {
-                return f1.divisor - f2.divisor;
-            }
-        });
+        Arrays.sort(tables, Comparator.comparingInt(f -> f.divisor));
         return tables;
     }
 
     public static void main(String[] args) throws IOException {
-        String hpath = args.length < 1 ? "C:\\work\\projects\\quantum\\cpp\\h" : args[0];
-        String vpath = args.length < 2 ? "C:\\work\\projects\\quantum\\cpp\\v" : args[1];
+        if (args.length < 2) {
+            System.err.println("Usage: hypocomp.bat <hdir> <vdir>");
+            return;
+        }
+        String hpath = args[0];
+        String vpath = args[1];
         FileTable[] h = read(new File(hpath));
         FileTable[] v = read(new File(vpath));
         for (int i = 0; i < v.length; i++) {

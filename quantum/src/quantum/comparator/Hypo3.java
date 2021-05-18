@@ -1,10 +1,7 @@
 package quantum.comparator;
 
-import common.math.PolyUtil;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public final class Hypo3 {
@@ -12,7 +9,7 @@ public final class Hypo3 {
     public static void main(String[] args) throws IOException {
         TableReader a = TableReader.read("C:\\work\\projects\\quantum\\cpp\\geq");
         TableReader b = TableReader.read("C:\\work\\projects\\quantum\\cpp\\diff\\err");
-        List<Double> nums = new ArrayList<Double>();
+        List<Double> nums = new ArrayList<>();
         int count = Math.min(a.times.size(), b.times.size());
         for (int i = 50; i < count; i++) {
             double n1 = a.columns.get(0).get(i).doubleValue();

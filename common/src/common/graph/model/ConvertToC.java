@@ -10,6 +10,10 @@ import java.io.FileReader;
 public final class ConvertToC {
 
     public static void main(String[] args) throws FileNotFoundException {
+        if (args.length <= 0) {
+            System.err.println("Usage: toC <graph file>...");
+            return;
+        }
         for (String arg : args) {
             File in = new File(arg);
             String fileName = in.getName();

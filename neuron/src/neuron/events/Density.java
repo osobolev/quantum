@@ -6,7 +6,7 @@ import java.util.TreeSet;
 
 final class Density {
 
-    private final SortedSet<Double> times = new TreeSet<Double>();
+    private final SortedSet<Double> times = new TreeSet<>();
 
     void add(double time) {
         times.add(time);

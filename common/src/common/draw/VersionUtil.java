@@ -4,25 +4,21 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 public final class VersionUtil {
 
     public static int loadRevision() {
         InputStream is = VersionUtil.class.getResourceAsStream("/revision.properties");
         if (is != null) {
-            try {
-                BufferedReader rdr = new BufferedReader(new InputStreamReader(is, "UTF8"));
-                try {
-                    String line = rdr.readLine();
-                    if (line != null) {
-                        try {
-                            return Integer.parseInt(line);
-                        } catch (NumberFormatException nfex) {
-                            // ignore
-                        }
+            try (BufferedReader rdr = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+                String line = rdr.readLine();
+                if (line != null) {
+                    try {
+                        return Integer.parseInt(line);
+                    } catch (NumberFormatException nfex) {
+                        // ignore
                     }
-                } finally {
-                    rdr.close();
                 }
             } catch (IOException ex) {
                 // ignore
