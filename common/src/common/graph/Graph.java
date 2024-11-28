@@ -29,9 +29,9 @@ public final class Graph {
         lengths = new Number[edges.length];
         destination = new int[edges.length][2];
         startForward = new Boolean[edges.length];
-        Map<Integer, Collection<Integer>> outMap = new HashMap<>(numVertex);
-        Map<Integer, Collection<Integer>> outMapFwd = new HashMap<>(numVertex);
-        Map<Integer, Collection<Integer>> inMapFwd = new HashMap<>(numVertex);
+        Map<Integer, List<Integer>> outMap = new HashMap<>(numVertex);
+        Map<Integer, List<Integer>> outMapFwd = new HashMap<>(numVertex);
+        Map<Integer, List<Integer>> inMapFwd = new HashMap<>(numVertex);
         for (int i = 0; i < edges.length; i++) {
             SimpleEdge e = edges[i];
             lengths[i] = e.length;
@@ -46,7 +46,7 @@ public final class Graph {
         int maxEdges = 0;
         int maxVertex = -1;
         for (int i = 0; i < numVertex; i++) {
-            Collection<Integer> vedges = outMap.get(i);
+            List<Integer> vedges = outMap.get(i);
             outEdges[i] = toArray(vedges);
             if (vedges != null) {
                 int numEdges = vedges.size();
@@ -84,7 +84,7 @@ public final class Graph {
         this.sigma = sigma;
     }
 
-    private static int[] toArray(Collection<Integer> c) {
+    private static int[] toArray(List<Integer> c) {
         if (c == null)
             return new int[0];
         int num = c.size();
@@ -96,9 +96,8 @@ public final class Graph {
         return array;
     }
 
-    private static void put(Map<Integer, Collection<Integer>> outMap, int vertex, int edge) {
-        Collection<Integer> edges = outMap.computeIfAbsent(vertex, k -> new ArrayList<>());
-        edges.add(edge);
+    private static void put(Map<Integer, List<Integer>> outMap, int vertex, int edge) {
+        outMap.computeIfAbsent(vertex, k -> new ArrayList<>()).add(edge);
     }
 
     public int getVertexNum() {
