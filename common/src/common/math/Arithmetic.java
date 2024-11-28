@@ -4,6 +4,7 @@ import org.apfloat.Apfloat;
 import org.apfloat.ApfloatMath;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public final class Arithmetic {
 
@@ -79,9 +80,9 @@ public final class Arithmetic {
 
         while (x0.compareTo(x1) != 0) {
             x0 = x1;
-            x1 = a.divide(x0, scale, BigDecimal.ROUND_HALF_UP);
+            x1 = a.divide(x0, scale, RoundingMode.HALF_UP);
             x1 = x1.add(x0);
-            x1 = x1.divide(TWO, scale, BigDecimal.ROUND_HALF_UP);
+            x1 = x1.divide(TWO, scale, RoundingMode.HALF_UP);
         }
 
         return x1;
